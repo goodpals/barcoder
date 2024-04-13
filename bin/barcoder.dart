@@ -32,6 +32,11 @@ final _parser = ArgParser()
     abbr: 'y',
     defaultsTo: '8',
     help: 'Height for 1D barcodes.',
+  )
+  ..addFlag(
+    'invert',
+    abbr: 'i',
+    help: 'Inverts the colours.',
   );
 
 void main(List<String> aargs) {
@@ -44,9 +49,13 @@ void main(List<String> aargs) {
     print('barcoder 0.0.1');
     return;
   }
-  final data = args.rest.first;
+  String data = args.rest.first;
   final type = args['type'] as String;
   final height = int.parse(args['height']);
+  final invert = args['invert'] as bool;
+  if (invert) {
+    data = [...data.split('').map((e) => e == '1' ? '0' : '1')].join();
+  }
   final output = switch (type) {
     '128' => _barcode128(data, height: height),
     'qr' => _qr(data),
